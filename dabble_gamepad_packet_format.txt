@@ -1,0 +1,25 @@
+For details refer to Gamepad Module docs: https://thestempedia.com/docs/dabble/game-pad-module/.
+
+Each change of state is reported by transmission of 8-byte packet.
+
+ff 01 02 01 02 <button> <joystick> 00
+
+<button> is bitwise OR of the following flags, each indicating press of the corresponding button.
+    01 - start
+    02 - select
+    10 - cross
+    04 - triangle
+    08 - circle
+    20 - square
+Therefore button = 0 means no button is being pressed.
+
+<joystick> byte is encodes angle and radius in the following way.
+
+<joystick> = `aaaa arrr`
+
+where `a`, `r` are binary digits.
+
+`rrr` encodes radius from 0 to 7.
+`aaaaa` encodes number of 15-degree steps which make current angle measured from right and counter-clockwise.
+        Angle ranges from 0 to 345, therefore `aaaaa` ranges from 0 to 23 (0x00 to 0x17).
+

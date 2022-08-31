@@ -1,0 +1,4 @@
+Voltage range: 6-12V
+Idle current: 100mA
+Peak current: 810mA (calculated from https://forum.pololu.com/t/bd65496muv-with-33gb-520-18-7/18991/3)
+
