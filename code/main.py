@@ -61,6 +61,9 @@ class Track:
 
 
 class DabbleGamepad:
+    """Class containing Dabble gamepad specific values and methods.
+    https://thestempedia.com/docs/dabble/game-pad-module/
+    """
     GAMEPAD_MAGIC = b'\xff\x01\x02\x01\x02'
 
     START = 0x1
@@ -87,21 +90,51 @@ class DabbleGamepad:
     DIR_MASK = ~RADIUS_MASK
 
     @staticmethod
-    def get_joystick_radius(joystick: int):
+    def get_joystick_radius(joystick: int) -> int:
+        """Get radius from joystick byte of the packet.
+
+        Args:
+            joystick (int): Joystick byte of the packet.
+
+        Returns:
+            int: Radius input.
+        """
         return joystick & DabbleGamepad.RADIUS_MASK
 
     @staticmethod
-    def get_joystick_dir(joystick: int):
+    def get_joystick_dir(joystick: int) -> int:
+        """Get direction from joystick byte of the packet.
+
+        Args:
+            joystick (int): Joystick byte of the packet.
+
+        Returns:
+            int: Number coding direction. From 0 to 23. 15-degree parts of 360 degree angle measured counter-clockwise from right.
+        """
         return joystick & DabbleGamepad.DIR_MASK >> 3
 
 
 def handle_button(button: int, track_left: Track, track_right: Track):
+    """Handle button press.
+
+    Args:
+        button (int): Button bitmask.
+        track_left (Track): Left track.
+        track_right (Track): Right track.
+    """
     if button & DabbleGamepad.SQUARE:
         track_left.fast_stop()
         track_right.fast_stop()
 
 
 def handle_joystick(joystick: int, track_left: Track, track_right: Track):
+    """Handle joystick input.
+
+    Args:
+        joystick (int): Joystick byte of the packet.
+        track_left (Track): Left track.
+        track_right (Track): Right track.
+    """
     radius = DabbleGamepad.get_joystick_radius(joystick)
     if radius == 0:
         track_left.set_power(0)
