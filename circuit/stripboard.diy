@@ -749,22 +749,6 @@
       <stripeColor hex="ffff00"/>
     </diylc.connectivity.HookupWire>
     <diylc.connectivity.HookupWire>
-      <name>W12</name>
-      <alpha>127</alpha>
-      <controlPoints2>
-        <point x="4.3" y="2.8"/>
-        <point x="5.0" y="2.8"/>
-      </controlPoints2>
-      <color hex="ff0000"/>
-      <pointCount>TWO</pointCount>
-      <style>SOLID</style>
-      <smooth>true</smooth>
-      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
-      <gauge>_22</gauge>
-      <striped>false</striped>
-      <stripeColor hex="ffff00"/>
-    </diylc.connectivity.HookupWire>
-    <diylc.connectivity.HookupWire>
       <name>W13</name>
       <alpha>127</alpha>
       <controlPoints2>
@@ -2360,6 +2344,23 @@
       <holeSpacing value="0.1" unit="in"/>
       <point x="5.9" y="3.2"/>
     </diylc.connectivity.TraceCut>
+    <diylc.connectivity.HookupWire>
+      <name>W12</name>
+      <alpha>127</alpha>
+      <controlPoints2>
+        <point x="5.0" y="2.9"/>
+        <point x="4.9" y="2.9"/>
+        <point x="4.2" y="4.3"/>
+      </controlPoints2>
+      <color hex="ff0000"/>
+      <pointCount>THREE</pointCount>
+      <style>SOLID</style>
+      <smooth>true</smooth>
+      <lastUpdatePointIndex>-1</lastUpdatePointIndex>
+      <gauge>_22</gauge>
+      <striped>false</striped>
+      <stripeColor hex="ffff00"/>
+    </diylc.connectivity.HookupWire>
   </components>
   <groups/>
   <lockedLayers/>
