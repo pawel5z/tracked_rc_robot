@@ -1,4 +1,5 @@
 from machine import Pin, PWM, UART
+from binascii import hexlify
 
 
 class Track:
@@ -148,6 +149,7 @@ bt_uart = UART(1, baudrate=460800, tx=Pin(8), rx=Pin(9),
                timeout=1000, timeout_char=100)
 
 packet = bytes()
+logfile = open("log.txt", "w")
 while True:
     byte = bt_uart.read(1)
     if byte == b'\x00' and len(packet) == 7 and packet[:5] == DabbleGamepad.GAMEPAD_MAGIC:
@@ -155,4 +157,6 @@ while True:
         handle_button(packet[5], track_left, track_right)
         packet = bytes()
     elif byte is not None:
+        logfile.write(f"{hexlify(byte, ' ')}\n")
+        logfile.flush()
         packet = (packet + byte)[-7:]
