@@ -85,8 +85,10 @@ class DabbleGamepad:
     FULL_ANGLE = 0
     DEG_360 = 0
 
+    RIGHT_ANGLE_OFFSET = 6
+
     MAX_RADIUS = 7
-    RADIUS_MASK = 0x3
+    RADIUS_MASK = 0b111
     DIR_MASK = ~RADIUS_MASK
 
     @staticmethod
@@ -111,7 +113,7 @@ class DabbleGamepad:
         Returns:
             int: Number coding direction. From 0 to 23. 15-degree parts of 360 degree angle measured counter-clockwise from right.
         """
-        return joystick & DabbleGamepad.DIR_MASK >> 3
+        return (joystick & DabbleGamepad.DIR_MASK) >> 3
 
 
 def handle_button(button: int, track_left: Track, track_right: Track):
@@ -138,32 +140,41 @@ def handle_joystick(joystick: int, track_left: Track, track_right: Track):
     radius = DabbleGamepad.get_joystick_radius(joystick)
     if radius == 0:
         track_left.set_power(0)
-        track_left.set_power(0)
+        track_right.set_power(0)
         return
 
-    dir = DabbleGamepad.get_joystick_dir(joystick)
+    direction = DabbleGamepad.get_joystick_dir(joystick)
 
     left_power = 100
-    if dir >= DabbleGamepad.DEG_90 and dir < DabbleGamepad.DEG_180:
+    if direction >= DabbleGamepad.DEG_90 and direction < DabbleGamepad.DEG_180:
         track_left.forward()
-        left_power *= DabbleGamepad.DEG_180 - dir
-    elif dir <= DabbleGamepad.DEG_270 and dir > DabbleGamepad.DEG_180:
+        left_power *= (DabbleGamepad.DEG_180 - direction) / \
+            DabbleGamepad.RIGHT_ANGLE_OFFSET
+    elif direction <= DabbleGamepad.DEG_270 and direction > DabbleGamepad.DEG_180:
         track_left.backward()
-        left_power *= dir - DabbleGamepad.DEG_180
-    elif dir == DabbleGamepad.DEG_180:
+        left_power *= (direction - DabbleGamepad.DEG_180) / \
+            DabbleGamepad.RIGHT_ANGLE_OFFSET
+    elif direction == DabbleGamepad.DEG_180:
         track_left.backward()
-    else:
+    elif direction < DabbleGamepad.DEG_90:
         track_left.forward()
+    elif direction > DabbleGamepad.DEG_270:
+        track_left.backward()
 
     right_power = 100
-    if dir <= DabbleGamepad.DEG_90 and dir > 0:
-        right_power *= dir / DabbleGamepad.DIRS_IN_QT_CNT
-    elif dir >= DabbleGamepad.DEG_270:
-        right_power *= DabbleGamepad.DIRS_CNT - dir
-    elif dir == DabbleGamepad.DEG_0:
-        track_right.backward()
-    else:
+    if direction <= DabbleGamepad.DEG_90 and direction > 0:
         track_right.forward()
+        right_power *= direction / DabbleGamepad.RIGHT_ANGLE_OFFSET
+    elif direction >= DabbleGamepad.DEG_270:
+        track_right.backward()
+        right_power *= (DabbleGamepad.DIRS_CNT - direction) / \
+            DabbleGamepad.RIGHT_ANGLE_OFFSET
+    elif direction == DabbleGamepad.DEG_0:
+        track_right.backward()
+    elif direction <= DabbleGamepad.DEG_180:
+        track_right.forward()
+    elif direction < DabbleGamepad.DEG_270:
+        track_right.backward()
 
     radius_mul = radius / DabbleGamepad.MAX_RADIUS
     track_left.set_power(left_power * radius_mul)
@@ -178,7 +189,7 @@ track_left = Track(21, [19, 18], TRACK_MOTOR_PWM_FREQ)
 track_right = Track(20, [17, 16], TRACK_MOTOR_PWM_FREQ)
 
 bt_uart = UART(1, baudrate=9600, tx=Pin(8), rx=Pin(9),
-               timeout=1000, timeout_char=100)
+               timeout=1000)
 
 packet = bytes()
 while True:
