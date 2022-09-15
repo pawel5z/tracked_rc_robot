@@ -177,7 +177,7 @@ TRACK_MOTOR_PWM_FREQ = 5000
 track_left = Track(21, [19, 18], TRACK_MOTOR_PWM_FREQ)
 track_right = Track(20, [17, 16], TRACK_MOTOR_PWM_FREQ)
 
-bt_uart = UART(1, baudrate=460800, tx=Pin(8), rx=Pin(9),
+bt_uart = UART(1, baudrate=9600, tx=Pin(8), rx=Pin(9),
                timeout=1000, timeout_char=100)
 
 packet = bytes()
