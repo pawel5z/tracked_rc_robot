@@ -26,7 +26,7 @@ class Track:
         if len(channels) != 2:
             raise ValueError(f"Incorrent number of channels: {2}.")
         self.channels = [Pin(channels[0], Pin.OUT), Pin(channels[1], Pin.OUT)]
-        if lowest_spin_duty < 0 or lowest_spin_duty > 65535:
+        if lowest_spin_duty is not None and lowest_spin_duty < 0 or lowest_spin_duty > 65535:
             raise ValueError(
                 f"Incorrect lowest_spin_duty value: {lowest_spin_duty}.")
         self.lowest_spin_duty = lowest_spin_duty
@@ -37,8 +37,8 @@ class Track:
         Args:
             duty (float): Number in range [0, 100].
         """
-        if power == 0:
-            self.enable.duty_u16(power)
+        if self.lowest_spin_duty is None or power == 0:
+            self.enable.duty_u16(int(power / 100 * Track.MAX_DUTY_CYCLE))
         else:
             self.enable.duty_u16(int(self.lowest_spin_duty + power /
                                  100 * (Track.MAX_DUTY_CYCLE - self.lowest_spin_duty)))
