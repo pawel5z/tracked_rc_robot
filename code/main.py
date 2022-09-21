@@ -6,7 +6,7 @@ class Track:
     """
     MAX_DUTY_CYCLE = 65535
 
-    def __init__(self, enable: int, channels, freq: int, lowest_spin_duty: int = None):
+    def __init__(self, enable: int, channels, freq: int, lowest_spin_duty: int = 0):
         """Initialize Track object.
 
         Args:
@@ -14,7 +14,7 @@ class Track:
             channels (List[int]): List of two pin numbers connected to L293 channels.
             The first one refers to forward channel, the second one to backward.
             freq (int): PWM frequency.
-            lowest_spin_duty (int, optional): Integer in range 0 to 65535.
+            lowest_spin_duty (int): Integer in range 0 to 65535.
             The lowest duty cycle making track spin. Defaults to None.
 
         Raises:
@@ -26,7 +26,7 @@ class Track:
         if len(channels) != 2:
             raise ValueError(f"Incorrent number of channels: {2}.")
         self.channels = [Pin(channels[0], Pin.OUT), Pin(channels[1], Pin.OUT)]
-        if lowest_spin_duty is not None and lowest_spin_duty < 0 or lowest_spin_duty > 65535:
+        if lowest_spin_duty < 0 or lowest_spin_duty > 65535:
             raise ValueError(
                 f"Incorrect lowest_spin_duty value: {lowest_spin_duty}.")
         self.lowest_spin_duty = lowest_spin_duty
@@ -37,11 +37,8 @@ class Track:
         Args:
             duty (float): Number in range [0, 100].
         """
-        if self.lowest_spin_duty is None or power == 0:
-            self.enable.duty_u16(int(power / 100 * Track.MAX_DUTY_CYCLE))
-        else:
-            self.enable.duty_u16(int(self.lowest_spin_duty + power /
-                                 100 * (Track.MAX_DUTY_CYCLE - self.lowest_spin_duty)))
+        self.enable.duty_u16(0 if not power else int(
+            self.lowest_spin_duty + power / 100 * (Track.MAX_DUTY_CYCLE - self.lowest_spin_duty)))
 
     def fast_stop(self):
         """Brake the track.
