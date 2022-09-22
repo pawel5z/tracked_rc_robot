@@ -1,0 +1,6 @@
+{
+    "cmake.sourceDirectory": "${workspaceFolder}/code/cpp",
+    "files.associations": {
+        "stdlib.h": "c"
+    }
+}
