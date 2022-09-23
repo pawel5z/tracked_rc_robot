@@ -1,0 +1,96 @@
+#include "dabble.h"
+#include "track.h"
+
+#include "hardware/uart.h"
+
+#include "pico/stdlib.h"
+
+#include <deque>
+
+void handleButton(char button, Track &trackLeft, Track &trackRight) {
+    if (button & dabble_gamepad::square) {
+        trackLeft.brake();
+        trackRight.brake();
+    }
+}
+
+void handleJoystick(char joystick, Track &trackLeft, Track &trackRight) {
+    int radius = dabble_gamepad::getJoystickRadius(joystick);
+    if (radius == 0) {
+        trackLeft.setPower(0);
+        trackRight.setPower(0);
+        return;
+    }
+
+    int direction = dabble_gamepad::getJoystickDir(joystick);
+
+    float leftPower = 100;
+    if (direction >= dabble_gamepad::deg90 && direction < dabble_gamepad::deg180) {
+        trackLeft.forward();
+        leftPower *= (dabble_gamepad::deg180 - direction) / float(dabble_gamepad::rightAngleOffset);
+    } else if (direction <= dabble_gamepad::deg270 && direction > dabble_gamepad::deg180) {
+        trackLeft.backward();
+        leftPower *= (direction - dabble_gamepad::deg180) / float(dabble_gamepad::rightAngleOffset);
+    } else if (direction == dabble_gamepad::deg180)
+        trackLeft.backward();
+    else if (direction < dabble_gamepad::deg90)
+        trackLeft.forward();
+    else if (direction > dabble_gamepad::deg270)
+        trackLeft.backward();
+
+    float rightPower = 100;
+    if (direction <= dabble_gamepad::deg90 and direction > 0) {
+        trackRight.forward();
+        rightPower *= direction / float(dabble_gamepad::rightAngleOffset);
+    } else if (direction >= dabble_gamepad::deg270) {
+        trackRight.backward();
+        rightPower *=
+            (dabble_gamepad::dirsCnt - direction) / float(dabble_gamepad::rightAngleOffset);
+    } else if (direction == dabble_gamepad::deg0)
+        trackRight.backward();
+    else if (direction <= dabble_gamepad::deg180)
+        trackRight.forward();
+    else if (direction < dabble_gamepad::deg270)
+        trackRight.backward();
+
+    float radiusMul = radius / float(dabble_gamepad::maxRadius);
+    trackLeft.setPower(leftPower * radiusMul);
+    trackRight.setPower(rightPower * radiusMul);
+}
+
+int main() {
+    // Set on-board led to constant flashing.
+    gpio_init(PICO_DEFAULT_LED_PIN);
+    gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
+    gpio_put(PICO_DEFAULT_LED_PIN, 1);
+
+    const int trackMotorPwmFreq = 5000;
+    const int lowestSpinDuty = 32767; // Obtained from testing.
+    Track trackLeft(21, {19, 18}, trackMotorPwmFreq, lowestSpinDuty);
+    Track trackRight(20, {17, 16}, trackMotorPwmFreq, lowestSpinDuty);
+
+#define UART uart1
+#define UART_TX_PIN 8
+#define UART_RX_PIN 9
+    uart_init(UART, 9600);
+    uart_set_format(UART, 8, 1, UART_PARITY_NONE);
+    gpio_set_function(UART_TX_PIN, GPIO_FUNC_UART);
+    gpio_set_function(UART_RX_PIN, GPIO_FUNC_UART);
+
+    std::deque<char> packet;
+
+    while (true) {
+        char byte = uart_getc(UART);
+
+        if (byte == 0x00 && packet.size() == 7 &&
+            std::deque<char>(packet.begin(), packet.begin() + 5) ==
+                dabble_gamepad::joystickGamepadMagic) {
+            handleJoystick(packet.at(6), trackLeft, trackRight);
+            handleButton(packet.at(5), trackLeft, trackRight);
+        }
+
+        packet.push_back(byte);
+        if (packet.size() == 8)
+            packet.pop_front();
+    }
+}
