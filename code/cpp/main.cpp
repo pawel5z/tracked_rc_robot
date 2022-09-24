@@ -79,8 +79,8 @@ int main() {
     gpio_put(PICO_DEFAULT_LED_PIN, 1);
 
     // Set up tracks' controls.
-    const int trackMotorPwmFreq = 5000;
-    const int lowestSpinDuty = 32767; // Obtained from testing.
+    const int trackMotorPwmFreq = 5000; // Maximum recommended frequency for L293.
+    const int lowestSpinDuty = 832;     // Obtained from testing.
     Track trackLeft(21, {19, 18}, trackMotorPwmFreq, lowestSpinDuty);
     Track trackRight(20, {17, 16}, trackMotorPwmFreq, lowestSpinDuty);
 

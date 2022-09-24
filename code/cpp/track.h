@@ -6,10 +6,10 @@
 
 class Track {
     /**
-     * @brief Class controlling a track with pair of L293 channels.
+     * @brief Class controlling a track with a pair of L293 channels.
      */
 public:
-    static const int unsigned short maxDutyCycle = 65535;
+    static const unsigned short maxDutyCycle = 1024;
 
     /**
      * @brief Construct a new Track object.
@@ -18,7 +18,7 @@ public:
      * @param channelGpios Array of two pin numbers connected to L293 channels. The first one refers
      * to forward channel, the second one to backward.
      * @param freq PWM frequency.
-     * @param lowest_spin_duty Integer in range 0 to 65535. The lowest duty cycle making track spin.
+     * @param lowest_spin_duty Integer in range 0 to 1024. The lowest duty cycle making track spin.
      */
     Track(const int enGpio, const std::array<int, 2> &channelGpios, const float freq,
           const unsigned short lowest_spin_duty = 0);

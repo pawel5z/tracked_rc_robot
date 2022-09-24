@@ -8,12 +8,16 @@ Track::Track(const int enGpio, const std::array<int, 2> &channelGpios, const flo
              const unsigned short lowest_spin_duty)
     : enGpio(enGpio), channelGpios(channelGpios), freq(freq), lowest_spin_duty(lowest_spin_duty) {
 
+    // Set up motor enable pin.
     gpio_set_function(enGpio, GPIO_FUNC_PWM);
     pwm_config config = pwm_get_default_config();
-    pwm_config_set_clkdiv(&config, clock_get_hz(clk_sys) / freq);
+    pwm_config_set_wrap(&config, maxDutyCycle - 1);
+    // Div calculated from RP2040 datasheet, p. 529.
+    pwm_config_set_clkdiv(&config, clock_get_hz(clk_sys) / (float(maxDutyCycle) * freq));
     pwm_init(pwm_gpio_to_slice_num(enGpio), &config, true);
     pwm_set_gpio_level(enGpio, 0);
 
+    // Set up channel pins controlling spin direction.
     for (const auto &chanGpio : channelGpios) {
         gpio_init(chanGpio);
         gpio_set_dir(chanGpio, GPIO_OUT);
