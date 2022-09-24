@@ -39,32 +39,33 @@ void handleJoystick(char joystick, Track &trackLeft, Track &trackRight) {
     int direction = dabble_gamepad::getJoystickDir(joystick);
 
     float leftPower = 100;
-    if (direction >= dabble_gamepad::deg90 && direction < dabble_gamepad::deg180) {
+    if (direction >= dabble_gamepad::deg90 && direction < dabble_gamepad::deg180) { // up, up/left
         trackLeft.forward();
         leftPower *= (dabble_gamepad::deg180 - direction) / float(dabble_gamepad::rightAngleOffset);
-    } else if (direction <= dabble_gamepad::deg270 && direction > dabble_gamepad::deg180) {
+    } else if (direction <= dabble_gamepad::deg270 &&
+               direction > dabble_gamepad::deg180) { // down, down/left
         trackLeft.backward();
         leftPower *= (direction - dabble_gamepad::deg180) / float(dabble_gamepad::rightAngleOffset);
-    } else if (direction == dabble_gamepad::deg180)
+    } else if (direction == dabble_gamepad::deg180) // left
         trackLeft.backward();
-    else if (direction < dabble_gamepad::deg90)
+    else if (direction < dabble_gamepad::deg90) // up/right, right
         trackLeft.forward();
-    else if (direction > dabble_gamepad::deg270)
+    else if (direction > dabble_gamepad::deg270) // down/right
         trackLeft.backward();
 
     float rightPower = 100;
-    if (direction <= dabble_gamepad::deg90 and direction > 0) {
+    if (direction <= dabble_gamepad::deg90 and direction > 0) { // up, up/right
         trackRight.forward();
         rightPower *= direction / float(dabble_gamepad::rightAngleOffset);
-    } else if (direction >= dabble_gamepad::deg270) {
+    } else if (direction >= dabble_gamepad::deg270) { // down, down/right
         trackRight.backward();
         rightPower *=
             (dabble_gamepad::dirsCnt - direction) / float(dabble_gamepad::rightAngleOffset);
-    } else if (direction == dabble_gamepad::deg0)
+    } else if (direction == dabble_gamepad::deg0) // right
         trackRight.backward();
-    else if (direction <= dabble_gamepad::deg180)
+    else if (direction <= dabble_gamepad::deg180) // left, up/left
         trackRight.forward();
-    else if (direction < dabble_gamepad::deg270)
+    else if (direction < dabble_gamepad::deg270) // down/left
         trackRight.backward();
 
     float radiusMul = radius / float(dabble_gamepad::maxRadius);
