@@ -7,6 +7,13 @@
 
 #include <deque>
 
+/**
+ * @brief Handle button press.
+ *
+ * @param button Button bitmask.
+ * @param trackLeft
+ * @param trackRight
+ */
 void handleButton(char button, Track &trackLeft, Track &trackRight) {
     if (button & dabble_gamepad::square) {
         trackLeft.brake();
@@ -14,6 +21,13 @@ void handleButton(char button, Track &trackLeft, Track &trackRight) {
     }
 }
 
+/**
+ * @brief Handle joystick input.
+ *
+ * @param joystick
+ * @param trackLeft
+ * @param trackRight
+ */
 void handleJoystick(char joystick, Track &trackLeft, Track &trackRight) {
     int radius = dabble_gamepad::getJoystickRadius(joystick);
     if (radius == 0) {
@@ -64,23 +78,25 @@ int main() {
     gpio_set_dir(PICO_DEFAULT_LED_PIN, GPIO_OUT);
     gpio_put(PICO_DEFAULT_LED_PIN, 1);
 
+    // Set up tracks' controls.
     const int trackMotorPwmFreq = 5000;
     const int lowestSpinDuty = 32767; // Obtained from testing.
     Track trackLeft(21, {19, 18}, trackMotorPwmFreq, lowestSpinDuty);
     Track trackRight(20, {17, 16}, trackMotorPwmFreq, lowestSpinDuty);
 
-#define UART uart1
-#define UART_TX_PIN 8
-#define UART_RX_PIN 9
-    uart_init(UART, 9600);
-    uart_set_format(UART, 8, 1, UART_PARITY_NONE);
-    gpio_set_function(UART_TX_PIN, GPIO_FUNC_UART);
-    gpio_set_function(UART_RX_PIN, GPIO_FUNC_UART);
+    // Set up UART communication with bluetooth module.
+#define BT_UART uart1
+#define BT_UART_TX_PIN 8
+#define BT_UART_RX_PIN 9
+    uart_init(BT_UART, 9600);
+    uart_set_format(BT_UART, 8, 1, UART_PARITY_NONE);
+    gpio_set_function(BT_UART_TX_PIN, GPIO_FUNC_UART);
+    gpio_set_function(BT_UART_RX_PIN, GPIO_FUNC_UART);
 
     std::deque<char> packet;
 
     while (true) {
-        char byte = uart_getc(UART);
+        char byte = uart_getc(BT_UART);
 
         if (byte == 0x00 && packet.size() == 7 &&
             std::deque<char>(packet.begin(), packet.begin() + 5) ==
