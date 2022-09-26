@@ -4,10 +4,10 @@
 
 #include <array>
 
+/**
+ * @brief Class controlling a track with a pair of L293 channels.
+ */
 class Track {
-    /**
-     * @brief Class controlling a track with a pair of L293 channels.
-     */
 public:
     static const unsigned short maxDutyCycle = 1024;
 
