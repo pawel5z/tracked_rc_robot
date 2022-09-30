@@ -18,10 +18,10 @@
       <value></value>
       <controlPoints>
         <point x="3.7" y="2.6"/>
-        <point x="7.6" y="4.6"/>
+        <point x="6.8" y="4.6"/>
       </controlPoints>
       <firstPoint x="3.7" y="2.6"/>
-      <secondPoint x="7.6" y="4.6"/>
+      <secondPoint x="6.8" y="4.6"/>
       <boardColor hex="f8ebb3"/>
       <borderColor hex="ada47d"/>
       <coordinateColor hex="b6b6b6"/>
@@ -2360,6 +2360,17 @@
       <holeSpacing value="0.1" unit="in"/>
       <point x="5.9" y="3.2"/>
     </diylc.connectivity.TraceCut>
+    <diylc.misc.Label>
+      <name>L2</name>
+      <point x="4.5" y="2.5"/>
+      <text>Pico is surface mounted on the copper side.&lt;br&gt;Everything else on the non-copper side.</text>
+      <font name="Dialog.plain" size="14" style="0"/>
+      <color hex="000000"/>
+      <center>false</center>
+      <horizontalAlignment>CENTER</horizontalAlignment>
+      <verticalAlignment>CENTER</verticalAlignment>
+      <orientation>DEFAULT</orientation>
+    </diylc.misc.Label>
   </components>
   <groups/>
   <lockedLayers/>
