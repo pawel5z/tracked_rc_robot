@@ -2797,7 +2797,7 @@
     (uuid da45ab69-b30a-4cf9-a41e-34ff692804b8)
     (property "Reference" "U2" (id 0) (at 120.65 40.64 0))
     (property "Value" "Pico" (id 1) (at 120.65 43.18 0))
-    (property "Footprint" "RPi_Pico:RPi_Pico_SMD_TH" (id 2) (at 120.65 71.12 90)
+    (property "Footprint" "MCU_RaspberryPi_and_Boards:RPi_Pico_SMD_TH" (id 2) (at 120.65 71.12 90)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "" (id 3) (at 120.65 71.12 0)
@@ -2980,7 +2980,7 @@
       (reference "U1") (unit 1) (value "LM7805_TO220") (footprint "Package_TO_SOT_THT:TO-220-3_Vertical")
     )
     (path "/da45ab69-b30a-4cf9-a41e-34ff692804b8"
-      (reference "U2") (unit 1) (value "Pico") (footprint "RPi_Pico:RPi_Pico_SMD_TH")
+      (reference "U2") (unit 1) (value "Pico") (footprint "MCU_RaspberryPi_and_Boards:RPi_Pico_SMD_TH")
     )
     (path "/54eddb53-33d9-4cb5-9366-ad41491747e8"
       (reference "U3") (unit 1) (value "L293D") (footprint "Package_DIP:DIP-16_W7.62mm")
