@@ -2635,7 +2635,7 @@
     (uuid 81ade2cd-bc57-45b8-89e6-f66033347ac0)
     (property "Reference" "SW2" (id 0) (at 144.78 64.77 0))
     (property "Value" "Reset" (id 1) (at 144.78 67.31 0))
-    (property "Footprint" "" (id 2) (at 144.78 67.31 0)
+    (property "Footprint" "Button_Switch_THT:SW_PUSH_6mm_H4.3mm" (id 2) (at 144.78 67.31 0)
       (effects (font (size 1.27 1.27)) hide)
     )
     (property "Datasheet" "~" (id 3) (at 144.78 67.31 0)
@@ -2974,7 +2974,7 @@
       (reference "SW1") (unit 1) (value "POWER") (footprint "")
     )
     (path "/81ade2cd-bc57-45b8-89e6-f66033347ac0"
-      (reference "SW2") (unit 1) (value "Reset") (footprint "")
+      (reference "SW2") (unit 1) (value "Reset") (footprint "Button_Switch_THT:SW_PUSH_6mm_H4.3mm")
     )
     (path "/87c63aec-2711-4c05-adcb-ded7e9118eaf"
       (reference "U1") (unit 1) (value "LM7805_TO220") (footprint "Package_TO_SOT_THT:TO-220-3_Vertical")
