@@ -2349,11 +2349,11 @@
     )
   )
 
-  (text "Connect to\nterminal 1 of J2." (at 41.91 25.4 0)
+  (text "Connect to\nterminal 2 of J2." (at 41.91 25.4 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid 1e16aae7-eb1d-4cca-b40e-f4fa584a41ac)
   )
-  (text "Connect to\nterminal 2 of J2." (at 41.91 64.77 180)
+  (text "Connect to\nterminal 1 of J2." (at 41.91 64.77 180)
     (effects (font (size 1.27 1.27)) (justify right bottom))
     (uuid 96dfb2e2-e3d5-459e-99f5-72e1ed566fe7)
   )
